@@ -1,0 +1,194 @@
+fkernel
+
+		Kernel Objects
+This section defines different objects that can be created. Each basic type of object shall be
+listed, then its base abreviation. Then, the different objects can be constructed via the bits
+section. For any none NA-bit value the object's name is `BITS-bit BASE_NAME`, and the
+abbreviation is `[BASE_ABBREVIATION]_[BITS]`. Objects must be placed on OA's with less than or
+equal to their bits, except for OAs themselves, otherwise objects of higher bits couldn't be
+accessed.
+
+	HEX_UID: [MEMORY_ADDRESS ## CLASS] BASE_NAME [BASE_ABREVIATION]
+
+	MEMORY_ADDRESS:
+		[N] No memory is allocated.
+		[P] Object is in physical address space.
+		[L] Object is in logical  address space.
+
+	CLASS:
+		[N] None
+		[K] Kernel
+		[M] Memory
+		[P] Paging
+
+	Generic
+[LK] Kernel Executable [kernel]
+
+[PM] Physical Memory  [pmem]
+[PM] Physical Region  [preg]
+[PM] Physical Segment [pseg]
+
+[LM] Logical Memory   [vmem]
+[LM] Logical Region   [vreg]
+[LM] logical Segment  [vseg]
+
+[LN] 32-bit Thread State [ts32]
+[LN] 64-bit Thread State [ts64]
+
+[LN] 16-bit Object Array [oa16]
+[LN] 32-bit Object Array [oa32]
+[LN] 64-bit Object Array [oa64]
+
+	Big Endian
+[LN] Big-Endian 32-bit Thread State [be_ts32]
+[LN] Big-Endian 64-bit Thread State [be_ts64]
+
+[LN] Big-Endian 16-bit Object Array [be_oa16]
+[LN] Big-Endian 32-bit Object Array [be_oa32]
+[LN] Big-Endian 64-bit Object Array [be_oa64]
+
+	x86 Generic
+[LK] Interupt Protected Pocedure  Call Table [x86_intppc]
+[LK] Syscall  Protected Procedure Call Table [x86_sysppc]
+
+[LN] Global Descriptor Table                 [x86_gdt]
+[LN] Local  Descriptor Table                 [x86_ldt]
+[LN] Thread State Segment                    [x86_tss]
+
+[LN] 64-bit Global Descriptor Table          [x86_gdt64]
+[LN] 64-bit Local  Descriptor Table          [x86_ldt64]
+[LN] 64-bit Thread State Segment             [x86_tss64]
+
+[NN] Model Specific Register                 [x86_msr]
+
+	x86 Paging
+[LP] Paging Base                             [x86_pb]
+[LP] 64-bit Paging Base                      [x86_pb64]
+
+[PP] Page Table                              [x86_pt]
+[PP] Page Directory                          [x86_pd]
+[PP] Page Directory Pointer Table            [x86_pdpt]
+[PP] 64-bit Page Table                       [x86_pt64]
+[PP] 64-bit Page Directory                   [x86_pd64]
+[PP] 64-bit Page Directory Pointer Table     [x86_pdpt64]
+[PP] PML4                                    [x86_PML4]
+[PP] PML5                                    [x86_PML5]
+
+
+	Kernel Instructions
+This section defines different instructions a thread can have the kernel
+execute. The format is as follows:
+	HEX_UID: CALL_MNEMONIC(TYPE PARAMATER, ...)
+
+	Generic
+source(OBJECT object)
+origin(OBJECT oa)
+base_origin()
+
+start     () source=object
+size      () source=object
+dependants() source=object
+type      () source=object
+
+relocate(INDEX freed, OBJECT memory) source=object
+move    (INDEX dest                ) source=object
+free    (                          ) source=object
+
+create(INDEX dest) source=memory
+
+ read_memory(ADDR output, ADDR offset, SIZE size) source=memory
+write_memory(ADDR data  , ADDR offset, SIZE size) source=memory
+ copy_memory(OBJECT dest, ADDR source_offset, ADDR dest_offset, SIZE size) source=source
+
+concat_memory(OBJECT/OUTPUT memory, OBJECT other_memory)
+
+	create_kernel(OUTPUT output, OBJECT memory, ADDR data)
+
+	free_object(OBJECT object)
+
+
+MEMORY DETAILS:
+	Memory Structures
+[structure] - [size][unit]
+	LOWER BYTES
+	MOST  SIGNIFIGANT BITS
+		## CONDITION ##
+	[n][unit][use] [info] - [label]
+	...
+		## END ##
+	LEAST SIGNIFIGANT BITS
+	HIGHER BYTES
+
+	Units
+b - bit
+B - byte (8b)
+H - 16-bit word (16b)
+D - 32-bit word (32b)
+Q - 64-bit word (64b)
+h - half object word (1w / 2) # Division is rounded down if decimal
+w - object word (corresponding to the object's bits)
+
+	Use:
+z - size
+p - logical  address pointer
+y - phYsical address pointer
+o - object pointer
+  - other
+
+	Info
+[F] - value can be calculated in constant time with previous fields
+[A] - alignment
+[P] - padding
+[R] - reserved - must be ignored & preserved
+
+	Object Array
+Data - [SIZE]
+	[8w] Entry ...
+
+Entry - [8w]
+		## MEMORY ALLOCATED ##
+	[1wp] Start
+	[1wz] Size
+		## END ##
+
+		## NO MEMORY ALLOCATED ##
+	[2w ] Extended Local Object Data
+		## END ##
+
+	[1w ] Dependants
+	[1w ] Type
+
+	[2w ] Local Object Data
+
+	[1w ] Multi-processer Lock
+	[1w ] [R]
+
+Local Object Data - [2w]
+	[2wp] Address Base
+
+
+	Region / Segment
+Local Object Data - [2w]
+	[2w - 3b] [R]
+	?? Caching ??
+	[1b] Read
+	[1b] Write
+	[1b] Execute
+
+	Model Specific Register
+Local Object Data - [2w]
+	[1w] Readable Bits
+	[1w] Writable Bits
+
+Extended Local Object Data - [2w]
+	[2w] MSR
+
+	Paging Base
+Memory - [4w]
+	[1o ] Kernel Paging Base
+	[1o ] Next Paging Base
+	[1o ] Last Paging Base
+	[1o ] Object
+
+Local Object Data - [2w]
+	[2w ] Page Base Type
