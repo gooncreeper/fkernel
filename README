@@ -1,0 +1,3 @@
+NOTE: Work in progress - Documentation, behavor, and API is subject to change at any point.
+
+This project include a microkernel interface specification {doc}, an implementation {fkernel}, and an inital loader {IKL}.
