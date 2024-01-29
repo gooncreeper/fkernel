@@ -1,78 +1,72 @@
 fkernel
+		Prelimentary
+This document specifies the behavor and standard data structures of the fkernel.
+
+The fkernel interface has four main goals
+	1. Minimality
+	2. Portability
+	3. No restrictions
+	4. No deferences, memory loss, or dangling pointers.
 
 		Kernel Objects
-This section defines different objects that can be created. Each basic type of object shall be
-listed, then its base abreviation. Then, the different objects can be constructed via the bits
-section. For any none NA-bit value the object's name is `BITS-bit BASE_NAME`, and the
-abbreviation is `[BASE_ABBREVIATION]_[BITS]`. Objects must be placed on OA's with less than or
-equal to their bits, except for OAs themselves, otherwise objects of higher bits couldn't be
-accessed.
-
-	HEX_UID: [MEMORY_ADDRESS ## CLASS] BASE_NAME [BASE_ABREVIATION]
+This sections specifies different objects that the kernel can create. Object shall
+be named in the following format,
+	HEX_UID: [MEMORY_ADDRESS] BASE_NAME [BASE_ABREVIATION]
 
 	MEMORY_ADDRESS:
-		[N] No memory is allocated.
-		[P] Object is in physical address space.
-		[L] Object is in logical  address space.
-
-	CLASS:
-		[N] None
-		[K] Kernel
-		[M] Memory
-		[P] Paging
+		N: No memory is allocated.
+		P: Object shall have memory allocated in physical memory
+		L: Object shall have memory allocated in logical memory
 
 	Generic
-[LK] Kernel Executable [kernel]
+[L] Kernel Executable [kernel]
 
-[PM] Physical Memory  [pmem]
-[PM] Physical Region  [preg]
-[PM] Physical Segment [pseg]
+[P] Physical Memory  [pmem]
+[P] Physical Region  [preg]
+[P] Physical Segment [pseg]
 
-[LM] Logical Memory   [vmem]
-[LM] Logical Region   [vreg]
-[LM] logical Segment  [vseg]
+[L] Logical Memory   [vmem]
+[L] Logical Region   [vreg]
+[L] Logical Segment  [vseg]
 
-[LN] 32-bit Thread State [ts32]
-[LN] 64-bit Thread State [ts64]
-
-[LN] 16-bit Object Array [oa16]
-[LN] 32-bit Object Array [oa32]
-[LN] 64-bit Object Array [oa64]
+[L] 16-bit Object Array [oa16]
+[L] 32-bit Object Array [oa32]
+[L] 64-bit Object Array [oa64]
 
 	Big Endian
-[LN] Big-Endian 32-bit Thread State [be_ts32]
-[LN] Big-Endian 64-bit Thread State [be_ts64]
+[L] Big-Endian 32-bit Thread State [be_ts32]
+[L] Big-Endian 64-bit Thread State [be_ts64]
 
-[LN] Big-Endian 16-bit Object Array [be_oa16]
-[LN] Big-Endian 32-bit Object Array [be_oa32]
-[LN] Big-Endian 64-bit Object Array [be_oa64]
+[L] Big-Endian 16-bit Object Array [be_oa16]
+[L] Big-Endian 32-bit Object Array [be_oa32]
+[L] Big-Endian 64-bit Object Array [be_oa64]
 
 	x86 Generic
-[LK] Interupt Protected Pocedure  Call Table [x86_intppc]
-[LK] Syscall  Protected Procedure Call Table [x86_sysppc]
+[L] X86 Interupt Protected Pocedure  Call Table [x86_intppc]
+[L] X86 Syscall  Protected Procedure Call Table [x86_sysppc]
 
-[LN] Global Descriptor Table                 [x86_gdt]
-[LN] Local  Descriptor Table                 [x86_ldt]
-[LN] Thread State Segment                    [x86_tss]
+[L] X86 Global Descriptor Table [x86_gdt]
+[L] X86 Local  Descriptor Table [x86_ldt]
+[L] X86 Thread State Segment    [x86_tss]
 
-[LN] 64-bit Global Descriptor Table          [x86_gdt64]
-[LN] 64-bit Local  Descriptor Table          [x86_ldt64]
-[LN] 64-bit Thread State Segment             [x86_tss64]
+[L] X86 64-bit Global Descriptor Table [x86_gdt64]
+[L] X86 64-bit Local  Descriptor Table [x86_ldt64]
+[L] X86 64-bit Thread State Segment    [x86_tss64]
 
-[NN] Model Specific Register                 [x86_msr]
+[N] X86 Model Specific Register [x86_msr]
 
 	x86 Paging
-[LP] Paging Base                             [x86_pb]
-[LP] 64-bit Paging Base                      [x86_pb64]
+[L] X86 Paging Base                         [x86_pb]
+[L] X86 64-bit Paging Base                  [x86_pb64]
 
-[PP] Page Table                              [x86_pt]
-[PP] Page Directory                          [x86_pd]
-[PP] Page Directory Pointer Table            [x86_pdpt]
-[PP] 64-bit Page Table                       [x86_pt64]
-[PP] 64-bit Page Directory                   [x86_pd64]
-[PP] 64-bit Page Directory Pointer Table     [x86_pdpt64]
-[PP] PML4                                    [x86_PML4]
-[PP] PML5                                    [x86_PML5]
+[P] X86 Page Table                          [x86_pt]
+[P] X86 Page Directory                      [x86_pd]
+[P] X86 Page Directory Pointer Table        [x86_pdpt]
+[P] X86 64-bit Page Table                   [x86_pt64]
+[P] X86 64-bit Page Directory               [x86_pd64]
+[P] X86 64-bit Page Directory Pointer Table [x86_pdpt64]
+[P] X86 PML4                                [x86_PML4]
+[P] X86 PML5                                [x86_PML5]
 
 
 	Kernel Instructions
@@ -95,6 +89,9 @@ move    (INDEX dest                ) source=object
 free    (                          ) source=object
 
 create(INDEX dest) source=memory
+
+merge
+concat
 
  read_memory(ADDR output, ADDR offset, SIZE size) source=memory
 write_memory(ADDR data  , ADDR offset, SIZE size) source=memory
