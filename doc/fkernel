@@ -6,14 +6,14 @@ The fkernel interface has four main goals
 	1. Minimality
 	2. Portability
 	3. No restrictions
-	4. No deferences, memory loss, or dangling pointers.
+	4. No deferences, memory loss, or dangling kernel pointers
 
 		Kernel Objects
-This sections specifies different objects that the kernel can create. Object shall
+This sections specifies different objects that the kernel can create. Objects shall
 be named in the following format,
-	HEX_UID: [MEMORY_ADDRESS] BASE_NAME [BASE_ABREVIATION]
+	HEX_UID: [MEMORY_TYPE] BASE_NAME [BASE_ABREVIATION]
 
-	MEMORY_ADDRESS:
+	MEMORY_TYPE:
 		N: No memory is allocated.
 		P: Object shall have memory allocated in physical memory
 		L: Object shall have memory allocated in logical memory
@@ -21,13 +21,12 @@ be named in the following format,
 	Generic
 [L] Kernel Executable [kernel]
 
-[P] Physical Memory  [pmem]
-[P] Physical Region  [preg]
-[P] Physical Segment [pseg]
+[P/L] Memory  [mem]
+[P/L] Region  [reg]
+[P/L] Segment [seg]
 
-[L] Logical Memory   [vmem]
-[L] Logical Region   [vreg]
-[L] Logical Segment  [vseg]
+[L] 32-bit Kernel State [ks32]
+[L] 64-bit Kernel State [ks64]
 
 [L] 16-bit Object Array [oa16]
 [L] 32-bit Object Array [oa32]
@@ -42,8 +41,8 @@ be named in the following format,
 [L] Big-Endian 64-bit Object Array [be_oa64]
 
 	x86 Generic
-[L] X86 Interupt Protected Pocedure  Call Table [x86_intppc]
-[L] X86 Syscall  Protected Procedure Call Table [x86_sysppc]
+[L] X86 Interupt [x86_interrupt]
+[L] X86 Syscall  [x86_syscall]
 
 [L] X86 Global Descriptor Table [x86_gdt]
 [L] X86 Local  Descriptor Table [x86_ldt]
@@ -166,11 +165,16 @@ Local Object Data - [2w]
 
 	Region / Segment
 Local Object Data - [2w]
-	[2w - 3b] [R]
+	[2w - 12b] [R]
 	?? Caching ??
-	[1b] Read
-	[1b] Write
-	[1b] Execute
+
+	[1b] Logical Read
+	[1b] Logical Write
+	[1b] Logical Execute
+
+	[1b] Physical Read
+	[1b] Physical Write
+	[1b] Physical Executeh
 
 	Model Specific Register
 Local Object Data - [2w]
