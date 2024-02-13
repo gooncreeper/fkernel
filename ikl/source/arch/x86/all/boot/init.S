@@ -4,7 +4,7 @@
 	# Define where stack is
 	.align 16
 
-	stack_botton:
+	stack_bottom:
 	.skip 4096 # Stack size - 4 KiB
 	stack_top:
 
